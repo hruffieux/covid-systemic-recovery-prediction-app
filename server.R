@@ -8,6 +8,7 @@ library(mixOmics)
 server <- function(input, output, session) { 
   
   load("predictive_model_fit.RData")
+  source("fun_perf.R")
   
   observeEvent(input$signature_1, {
     
@@ -242,10 +243,6 @@ server <- function(input, output, session) {
              "should be disregarded when the performance is insufficient (e.g. AUC <0.7).<br/> ", 
              "&nbsp;")
     })
-    
-    source("~/Documents/R_repos/patient-level-covid-shiny-old/scripts/fun_perf.R")
-    
-    
     
     list_X_test_sub <- lapply(seq_along(list_X_test), function(ii) {
       ll <- list_X_test[[ii]]

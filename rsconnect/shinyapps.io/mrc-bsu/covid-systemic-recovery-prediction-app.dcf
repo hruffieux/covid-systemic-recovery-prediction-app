@@ -1,0 +1,11 @@
+name: covid-systemic-recovery-prediction-app
+title:
+username:
+account: mrc-bsu
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5140235
+bundleId: 5259577
+url: https://mrc-bsu.shinyapps.io/covid-systemic-recovery-prediction-app/
+when: 1637095479.18639
+lastSyncTime: 1637095479.1864

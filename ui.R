@@ -3,6 +3,8 @@ library(purrr)
 library(stringr)
 library(shinyjs)
 library(shinyWidgets)
+library(BiocManager)
+options(repos = BiocManager::repositories())
 
 load("predictive_model_fit.RData")
 
