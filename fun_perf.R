@@ -47,7 +47,7 @@ multi_auroc <- function(
       
       # controls the ordering of colors
       nn_pred <- names(res.predict)
-      nn_pred[nn_pred == "MS"] <- "Amino acids & Tryptophan metabolites"
+      nn_pred[nn_pred == "MS"] <- "Polar metabolites"
       nn_pred[nn_pred == "cell_types"] <- "Cell subsets"
       nn_pred[nn_pred == "glyco-lipo-proteins"] <- "Glyco− & Lipo−proteins"
       nn_pred[nn_pred == "ratios"] <- "Ratios"

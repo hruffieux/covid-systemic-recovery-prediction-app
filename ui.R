@@ -73,7 +73,7 @@ ui <- fluidPage(
          }
          
          #textGuide{color: grey;
-                                 font-size: 11.8px;
+                                 font-size: 10.6px;
                                  //font-style: italic;
           }
          ')
@@ -81,7 +81,7 @@ ui <- fluidPage(
   tabPanel("Predictive model", 
            titlePanel('Integrative prediction tool for systemic recovery from COVID-19'),
            p(paste0("Select patient markers from the two predictive signatures ", 
-                    "(cell subsets, amino acids & tryptophan metabolites, ", 
+                    "(cell subsets, polar metabolites, ", 
                     "glyco- & lipo-proteins, diverse ratios)")),
            fluidRow(column(2, pickerInput(
              inputId = "signature_1",
