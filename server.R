@@ -183,10 +183,11 @@ server <- function(input, output, session) {
     
     output$sel <- renderText({
       paste0("<br/> <center> <b> Predicted systemic recovery class: ", pred_classes[2],
-             "<br/> ", ifelse(pred_classes[2] == "iii",
-                              "<i>Poor prognosis</i>",
-                              "<i>Good prognosis</i>"), "</b> <br/> </center> ",
-             paste0(rep(".", 143), collapse = ""))
+             "<br/> ", 
+             ifelse(pred_classes[2] == "iii",
+                               "<i>Poor prognosis (pilot tool)</i>",
+                               "<i>Good prognosis (pilot tool)</i>"), "</b> <br/> </center> ",
+            paste0(rep(".", 143), collapse = ""))
     })
     
     output$sel0 <- renderText({
@@ -206,7 +207,7 @@ server <- function(input, output, session) {
              length(input_signature_1),
              "</b> & <b>", 
              length(input_signature_2),
-             "</b> from signatures 1, resp. 2) <br/> ") 
+             "</b> from signatures 1, resp. 2) <br/><br/> ") 
     })
     
     output$textBox <- renderUI({
@@ -219,14 +220,14 @@ server <- function(input, output, session) {
     
     output$textGuide <- renderText({
       paste0("<br/> <b>Quick Guide</b> <br/> <br/>",
-             "The app provides an estimate of the recovery prognosis ",
-             "for a COVID patient when presented to the clinic at an early disease ", 
-             "stage. It has been developed using training-test splits of data ",
-             "from a single cohort [REF] and therefore *does not* consistute an ",
+             "<b>**The app has been developed using training-test splits of data ",
+             "from a single cohort [REF] and therefore DOES NOT consistute an ",
              "externally validated diagnostic tool but rather a pilot to guide ",
-             "future clinically-actionable work. It relies on an integrative ", 
-             "latent model for `systemic recovery' and on the availability of ",
-             "a selection of blood markers. <br/><br/>", #from the recovery signatures. 
+             "future clinically-actionable work.**</b> The ambition is to provide an ",
+             "estimate of the recovery prognosis for a COVID patient when ", 
+             "presented to the clinic at an early disease stage. The statistical ",
+             "approach relies on an integrative latent model for `systemic ", 
+             "recovery' and on the availability of a selection of blood markers. <br/><br/>", #from the recovery signatures. 
              "The model outputs the estimated systemic recovery class (using the ", 
              "nomenclature in [REF]) along with a predicted score, serving as a ",
              "measure of confidence in the predicted class. <br/><br/>",

@@ -79,10 +79,10 @@ ui <- fluidPage(
          ')
   )),
   tabPanel("Predictive model", 
-           titlePanel('Integrative prediction tool for systemic recovery from COVID-19'),
+           titlePanel('Integrative prediction of systemic recovery from COVID-19'),
            p(paste0("Select patient markers from the two predictive signatures ", 
                     "(cell subsets, polar metabolites, ", 
-                    "glyco- & lipo-proteins, diverse ratios)")),
+                    "glyco- & lipo-proteins, diverse metabolic ratios)")),
            fluidRow(column(2, pickerInput(
              inputId = "signature_1",
              label = "Signature 1",
@@ -195,7 +195,7 @@ ui <- fluidPage(
                          padding-bottom: 2mm;
                          padding-top: 1mm;",
                          draggable = TRUE, top = 120, left = 1125, right = "auto", bottom = "auto",
-                         width = 295, #290, 
+                         width = 298, #290, 
                          height = "auto",
                          htmlOutput("textGuide"),
                          cursor = "move"
