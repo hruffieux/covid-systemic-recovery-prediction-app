@@ -221,15 +221,16 @@ server <- function(input, output, session) {
     output$textGuide <- renderText({
       paste0("<br/> <b>Quick Guide</b> <br/> <br/>",
              "<b>**The app has been developed using training-test splits of data ",
-             "from a single cohort [REF] and therefore DOES NOT consistute an ",
+             "from a single cohort and therefore DOES NOT constitute an ",
              "externally validated diagnostic tool but rather a pilot to guide ",
              "future clinically-actionable work.**</b> The ambition is to provide an ",
              "estimate of the recovery prognosis for a COVID patient when ", 
              "presented to the clinic at an early disease stage. The statistical ",
              "approach relies on an integrative latent model for `systemic ", 
              "recovery' and on the availability of a selection of blood markers. <br/><br/>", #from the recovery signatures. 
-             "The model outputs the estimated systemic recovery class (using the ", 
-             "nomenclature in [REF]) along with a predicted score, serving as a ",
+              "The model outputs the estimated systemic recovery class ", #(using the ", 
+             # "nomenclature in [REF]) 
+             "along with a predicted score, serving as a ",
              "measure of confidence in the predicted class. <br/><br/>",
              "The slider value of a given marker should be set based on where ", 
              "the patient value stands with respect normal levels. It covers the ", 
