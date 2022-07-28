@@ -53,7 +53,8 @@ server <- function(input, output, session) {
   }, ignoreNULL = F)
   
   
-  list_render_color_1 <- lapply(seq_along(signature_1_mod), function(ii) {
+  list_render_color_1 <- lapply(seq_along(signature_1_mod)[!(signature_1_mod %in% c("Age", "Gender"))], # no colors for age and gender
+                                function(ii) {
     
     marker <- signature_1_mod[ii]
     
@@ -77,7 +78,7 @@ server <- function(input, output, session) {
     })
     
   })
-  names(list_render_color_1) <- paste0("color_", signature_1_mod)
+  names(list_render_color_1) <- paste0("color_", signature_1_mod[!(signature_1_mod %in% c("Age", "Gender"))])
   
   
   list_render_color_2 <- lapply(seq_along(signature_2_mod), function(ii) {
@@ -110,7 +111,7 @@ server <- function(input, output, session) {
   }
   
   output$color_signature_1 <- renderUI({ 
-    lapply(signature_1_mod, function(ss) {
+    lapply(signature_1_mod[!(signature_1_mod %in% c("Age", "Gender"))], function(ss) {
       tfc_1(ss)
     })
   })
@@ -143,8 +144,12 @@ server <- function(input, output, session) {
       ss <-  input_signatures[ii]
       ss_mod <- input_signatures_mod[ii]
       
-      perc_hc_and_all <- Reduce("cbind", list_perc_hc_and_all)
-      perc_hc_and_all[paste0(input[[paste0("slider_", ss_mod)]], "%"), ss]
+      if (ss %in% c("Age", "Gender")) {
+        input[[paste0("slider_", ss_mod)]] ############# <------------
+      } else {
+        perc_hc_and_all <- Reduce("cbind", list_perc_hc_and_all)
+        perc_hc_and_all[paste0(input[[paste0("slider_", ss_mod)]], "%"), ss]
+      }
       
     })
     names(active_markers) <-  input_signatures # input_signature_1
@@ -153,8 +158,8 @@ server <- function(input, output, session) {
     inactive_markers <- setdiff(c(signature_1, signature_2), 
                                 names(active_markers))
     
-    # /!\ convert back *_mod to * otherwise top_res won't find "Vg9Vd2 hi gd T"
-    list_X_new <- lapply(list_X_test, function(ll) {
+    # /!\ convert back *_mod to * otherwise top_res_cov won't find "Vg9Vd2 hi gd T"
+    list_X_new <- lapply(list_X_test_cov, function(ll) {
       
       ll <- ll[1,, drop = FALSE] # only one patient
       ll[!is.na(ll)] <- NA # initialise all entries to NA by precaution
@@ -169,7 +174,7 @@ server <- function(input, output, session) {
       
     })
     
-    my_pred_new <- predict(top_res, newdata = list_X_new)
+    my_pred_new <- predict(top_res_cov, newdata = list_X_new)
     
     pred_classes <- as.vector(my_pred_new$AveragedPredict.class$max.dist)
     pred_scores <- as.vector(apply(my_pred_new$AveragedPredict, 3, max))
@@ -250,8 +255,8 @@ server <- function(input, output, session) {
              "&nbsp;")
     })
     
-    list_X_test_sub <- lapply(seq_along(list_X_test), function(ii) {
-      ll <- list_X_test[[ii]]
+    list_X_test_cov_sub <- lapply(seq_along(list_X_test_cov), function(ii) {
+      ll <- list_X_test_cov[[ii]]
       
       if (!is.null(inactive_markers)) {
         ll[, colnames(ll) %in% inactive_markers] <- NA
@@ -259,11 +264,11 @@ server <- function(input, output, session) {
       
       ll*1 # to convert to numeric in case all NA otherwise converted to logical...
     })
-    names(list_X_test_sub) <- names(list_X_test)
+    names(list_X_test_cov_sub) <- names(list_X_test_cov)
     
     
     if (length(active_markers)>0) {
-      multi_auroc(top_res, newdata = list_X_test_sub, outcome.test = sub_df_info_test[, dep_var],
+      multi_auroc(top_res_cov, newdata = list_X_test_cov_sub, outcome.test = sub_df_info_test[, dep_var],
                   roc.comp = 2, bool_multiple = TRUE, bool_add_avg = TRUE, vec_col = vec_col_diablo)
     }
   })

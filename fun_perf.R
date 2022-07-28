@@ -51,6 +51,7 @@ multi_auroc <- function(
       nn_pred[nn_pred == "cell_types"] <- "Cell subsets"
       nn_pred[nn_pred == "glyco-lipo-proteins"] <- "Glyco− & Lipo−proteins"
       nn_pred[nn_pred == "ratios"] <- "Ratios"
+      nn_pred[nn_pred == "covariates"] <- "Age & gender"
       names(res.predict) <- paste0(" ", nn_pred) 
       names(vec_col) <- names(res.predict) 
       

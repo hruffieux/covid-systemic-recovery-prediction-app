@@ -51,6 +51,11 @@ ui <- fluidPage(
            // border: 1.4px solid rgba(0,0,0, 0.25);
             background-color: LightGray;
         }
+        
+        #slider5 {
+           // border: 1.4px solid rgba(0,0,0, 0.25);
+            background-color: LightGray;
+         }
 
         body, label, input, button, select { 
           font-family: "Arial";
@@ -157,10 +162,19 @@ ui <- fluidPage(
                            str_c(ss, ':'),
                            min = 0, max = 100, step = 1, value =  perc_corresp_hc_iqr_mod["50%", ss],
                            ticks = FALSE))),
-             column(2, offset = 0, id = "slider4b", lapply(list_signature_2_mod[[4]], function(ss) 
+             column(2, offset = 0, id = "slider4b", lapply(list_signature_2_mod[[4]], function(ss)
                sliderInput(paste0("slider_", ss),
                            str_c(ss, ':'),
                            min = 0, max = 100, step = 1, value =  perc_corresp_hc_iqr_mod["50%", ss],
+                           ticks = FALSE)))
+           ),
+           fluidRow(
+             chooseSliderSkin("Flat"),
+             shinyjs::useShinyjs(),
+             column(2, offset = 0, id = "slider5", lapply(list_signature_1_mod[[5]], function(ss)
+               sliderInput(paste0("slider_", ss),
+                           str_c(ss, ':'),
+                           min = 0, max = 100, step = 1, value =  1, #perc_corresp_hc_iqr_mod["50%", ss],# <------------
                            ticks = FALSE)))
            ),
            # mainPanel(),
