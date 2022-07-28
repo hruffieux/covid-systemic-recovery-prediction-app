@@ -53,32 +53,41 @@ server <- function(input, output, session) {
   }, ignoreNULL = F)
   
   
-  list_render_color_1 <- lapply(seq_along(signature_1_mod)[!(signature_1_mod %in% c("Age", "Gender"))], # no colors for age and gender
+  list_render_color_1 <- lapply(seq_along(signature_1_mod), # no colors for age and gender
                                 function(ii) {
     
     marker <- signature_1_mod[ii]
-    
     jj <- vec_slider_signature_1[ii]
+
+    if (marker %in% c("Age", "Gender")) {
+
+      color <-  reactive({tags$style(HTML(paste0(".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1,
+                                 " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Grey}")))})
+
+    } else {
+
+      color <- reactive({
+        
+        if(input[[paste0("slider_", marker)]][1] <= perc_corresp_hc_iqr_mod["25%", marker]){
+          tags$style(HTML(paste0(#".irs {max-width: 50px;}", 
+            #" irs-bar {width: 100%; height: 15px; background: black; border-top: 1px solid black; border-bottom: 1px solid black;}",
+            ".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1, 
+            " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Navy}"))) # CornflowerBlue
+        }else if(input[[paste0("slider_", marker)]][1] <= perc_corresp_hc_iqr_mod["75%", marker]){
+          tags$style(HTML(paste0(".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1, 
+                                 " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Grey}")))
+        }else{
+          tags$style(HTML(paste0(".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1, 
+                                 " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Crimson}"))) # Salmon
+        }
+        
+      })
+      
+    }
     
-    color <- reactive({
-      
-      if(input[[paste0("slider_", marker)]][1] <= perc_corresp_hc_iqr_mod["25%", marker]){
-        tags$style(HTML(paste0(#".irs {max-width: 50px;}", 
-          #" irs-bar {width: 100%; height: 15px; background: black; border-top: 1px solid black; border-bottom: 1px solid black;}",
-          ".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1, 
-          " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Navy}"))) # CornflowerBlue
-      }else if(input[[paste0("slider_", marker)]][1] <= perc_corresp_hc_iqr_mod["75%", marker]){
-        tags$style(HTML(paste0(".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1, 
-          " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Grey}")))
-      }else{
-        tags$style(HTML(paste0(".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1, 
-          " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Crimson}"))) # Salmon
-      }
-      
-    })
     
   })
-  names(list_render_color_1) <- paste0("color_", signature_1_mod[!(signature_1_mod %in% c("Age", "Gender"))])
+  names(list_render_color_1) <- paste0("color_", signature_1_mod)
   
   
   list_render_color_2 <- lapply(seq_along(signature_2_mod), function(ii) {
@@ -111,7 +120,7 @@ server <- function(input, output, session) {
   }
   
   output$color_signature_1 <- renderUI({ 
-    lapply(signature_1_mod[!(signature_1_mod %in% c("Age", "Gender"))], function(ss) {
+    lapply(signature_1_mod, function(ss) {
       tfc_1(ss)
     })
   })
@@ -145,7 +154,7 @@ server <- function(input, output, session) {
       ss_mod <- input_signatures_mod[ii]
       
       if (ss %in% c("Age", "Gender")) {
-        input[[paste0("slider_", ss_mod)]] ############# <------------
+        input[[paste0("slider_", ss_mod)]]
       } else {
         perc_hc_and_all <- Reduce("cbind", list_perc_hc_and_all)
         perc_hc_and_all[paste0(input[[paste0("slider_", ss_mod)]], "%"), ss]

@@ -54,7 +54,7 @@ ui <- fluidPage(
         
         #slider5 {
            // border: 1.4px solid rgba(0,0,0, 0.25);
-            background-color: LightGray;
+            background-color: #f2e4ec;
          }
 
         body, label, input, button, select { 
@@ -171,11 +171,18 @@ ui <- fluidPage(
            fluidRow(
              chooseSliderSkin("Flat"),
              shinyjs::useShinyjs(),
-             column(2, offset = 0, id = "slider5", lapply(list_signature_1_mod[[5]], function(ss)
-               sliderInput(paste0("slider_", ss),
-                           str_c(ss, ':'),
-                           min = 0, max = 100, step = 1, value =  1, #perc_corresp_hc_iqr_mod["50%", ss],# <------------
-                           ticks = FALSE)))
+             column(2, offset = 0, id = "slider5", lapply(list_signature_1_mod[[5]], function(ss) {
+               if (ss == "Age") {
+                 sliderInput(paste0("slider_", ss),
+                             str_c(ss, ':'),
+                             min = 0, max = 100, step = 1, value =  50, #perc_corresp_hc_iqr_mod["50%", ss],# <------------
+                             ticks = FALSE)
+               } else {
+                 sliderInput(paste0("slider_", ss),
+                             paste0(ss, ' F: 0, M: 1'),
+                             min = 0, max = 1, step = 1, value =  1, #perc_corresp_hc_iqr_mod["50%", ss],# <------------
+                             ticks = FALSE)
+               }}))
            ),
            # mainPanel(),
            uiOutput("color_signature_1"),
