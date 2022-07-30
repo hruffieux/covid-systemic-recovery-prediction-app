@@ -4,12 +4,31 @@ library(stringr)
 library(shinyjs)
 library(shinyWidgets)
 library(mixOmics)
+library(shinyvalidate)
 
 server <- function(input, output, session) { 
   
   load("predictive_model_fit.RData")
   source("fun_perf.R")
   
+  iv <- InputValidator$new()
+  iv$add_rule("slider_Age", sv_between(0, 100))
+  iv$enable()
+  
+  observeEvent(input$slider_Age, {
+    if(!iv$is_valid()) {
+      showNotification("Age must be between 0 and 100.", type = "message")
+      updateNumericInput(
+        session = session,
+        "slider_Age",
+        value = 50,
+        min = 0,
+        max = 100,
+        step = 1
+      )
+    }
+
+  })
   
   observeEvent(input$signature_0, {
     
@@ -165,7 +184,6 @@ server <- function(input, output, session) {
       tfc_2(ss)
     })
   })
-  
   
   output$plot <- renderPlot({
     

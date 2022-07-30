@@ -5,6 +5,7 @@ library(shinyjs)
 library(shinyWidgets)
 library(BiocManager)
 options(repos = BiocManager::repositories())
+library(shinyvalidate)
 
 load("predictive_model_fit.RData")
 
@@ -105,10 +106,19 @@ ui <- fluidPage(
              shinyjs::useShinyjs(),
              column(2, offset = 0, id = "slider0", lapply(list_signature_0_mod[[1]], function(ss) {
                if (ss == "Age") {
-                 sliderInput(paste0("slider_", ss),
-                             str_c(ss, ':'),
-                             min = 0, max = 100, step = 1, value =  50, #perc_corresp_hc_iqr_mod["50%", ss],# <------------
-                             ticks = FALSE)
+                 numericInput(
+                   paste0("slider_", ss),
+                   str_c(ss, ':'),
+                   value = 50,
+                   min = 0,
+                   max = 100,
+                   step = 1,
+                   width = NULL
+                 )
+                 # sliderInput(paste0("slider_", ss),
+                 #             str_c(ss, ':'),
+                 #             min = 0, max = 100, step = 1, value =  50, #perc_corresp_hc_iqr_mod["50%", ss],# <------------
+                 #             ticks = FALSE)
                } else { # Gender
                  sliderInput(paste0("slider_", ss),
                              "Female: 0, Male: 1",
