@@ -10,6 +10,20 @@ server <- function(input, output, session) {
   load("predictive_model_fit.RData")
   source("fun_perf.R")
   
+  
+  observeEvent(input$signature_0, {
+    
+    if (!all(signature_0_mod %in% input$signature_0)) { 
+      lapply(setdiff(signature_0_mod, input$signature_0), function(ss) disable(paste0("slider_", ss)))
+    }
+    
+    if (!is.null(input$signature_0)) { # doesn't work if nothing is selected
+      lapply(input$signature_0, function(ss) enable(paste0("slider_", ss)))
+    }
+    
+  }, ignoreNULL = F)
+  
+  
   observeEvent(input$signature_1, {
     
     if(is.null(input$signature_1)){
@@ -53,38 +67,43 @@ server <- function(input, output, session) {
   }, ignoreNULL = F)
   
   
+  list_render_color_0 <- lapply(seq_along(signature_0_mod), # no colors for age and gender
+                                function(ii) {
+                                  
+                                  marker <- signature_0_mod[ii]
+                                  jj <- ii # vec_slider_signature_0[ii]
+                                  
+                                  color <-  reactive({tags$style(HTML(paste0(".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1,
+                                                                             " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Grey}")))})
+                                  
+                                })
+  names(list_render_color_0) <- paste0("color_", signature_0_mod)
+  
+  
+  
   list_render_color_1 <- lapply(seq_along(signature_1_mod), # no colors for age and gender
                                 function(ii) {
     
     marker <- signature_1_mod[ii]
     jj <- vec_slider_signature_1[ii]
 
-    if (marker %in% c("Age", "Gender")) {
-
-      color <-  reactive({tags$style(HTML(paste0(".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1,
-                                 " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Grey}")))})
-
-    } else {
-
-      color <- reactive({
-        
-        if(input[[paste0("slider_", marker)]][1] <= perc_corresp_hc_iqr_mod["25%", marker]){
-          tags$style(HTML(paste0(#".irs {max-width: 50px;}", 
-            #" irs-bar {width: 100%; height: 15px; background: black; border-top: 1px solid black; border-bottom: 1px solid black;}",
-            ".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1, 
-            " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Navy}"))) # CornflowerBlue
-        }else if(input[[paste0("slider_", marker)]][1] <= perc_corresp_hc_iqr_mod["75%", marker]){
-          tags$style(HTML(paste0(".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1, 
-                                 " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Grey}")))
-        }else{
-          tags$style(HTML(paste0(".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1, 
-                                 " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Crimson}"))) # Salmon
-        }
-        
-      })
+    color <- reactive({
+      
+      if(input[[paste0("slider_", marker)]][1] <= perc_corresp_hc_iqr_mod["25%", marker]){
+        tags$style(HTML(paste0(#".irs {max-width: 50px;}", 
+          #" irs-bar {width: 100%; height: 15px; background: black; border-top: 1px solid black; border-bottom: 1px solid black;}",
+          ".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1, 
+          " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Navy}"))) # CornflowerBlue
+      }else if(input[[paste0("slider_", marker)]][1] <= perc_corresp_hc_iqr_mod["75%", marker]){
+        tags$style(HTML(paste0(".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1, 
+                               " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Grey}")))
+      }else{
+        tags$style(HTML(paste0(".js-irs-", jj-1, " .irs-single, .js-irs-", jj-1, 
+                               " .irs-bar-edge, .js-irs-", jj-1, " .irs-bar {background: Crimson}"))) # Salmon
+      }
       
     }
-    
+    )
     
   })
   names(list_render_color_1) <- paste0("color_", signature_1_mod)
@@ -113,6 +132,17 @@ server <- function(input, output, session) {
     
   })
   names(list_render_color_2) <- paste0("color_", signature_2_mod)
+
+  tfc_0 = function(ss) {
+    force(ss)
+    list_render_color_0[[paste0("color_", ss)]]()
+  }
+  
+  output$color_signature_0 <- renderUI({ 
+    lapply(signature_0_mod, function(ss) {
+      tfc_0(ss)
+    })
+  })
   
   tfc_1 = function(ss) {
     force(ss)
@@ -139,14 +169,16 @@ server <- function(input, output, session) {
   
   output$plot <- renderPlot({
     
+    input_signature_0 <- input$signature_0
+    
     input_signature_1 <- input$signature_1
     input_signature_1[input$signature_1 %in% "Vg9Vd2 hi gd T"] <- "Vg9Vd2(hi) gd T"
     
     input_signature_2 <- input$signature_2
     input_signature_2[input$signature_2 %in% "IgG Memory"] <- "IgG+ Memory"
     
-    input_signatures <- c(input_signature_1, input_signature_2)
-    input_signatures_mod <- c(input$signature_1, input$signature_2)
+    input_signatures <- c(input_signature_0, input_signature_1, input_signature_2)
+    input_signatures_mod <- c(input$signature_0, input$signature_1, input$signature_2)
     
     active_markers <- sapply(seq_along(input_signatures), function(ii) {
       
@@ -164,7 +196,7 @@ server <- function(input, output, session) {
     names(active_markers) <-  input_signatures # input_signature_1
     
     # print(active_markers)
-    inactive_markers <- setdiff(c(signature_1, signature_2), 
+    inactive_markers <- setdiff(c(signature_0, signature_1, signature_2), 
                                 names(active_markers))
     
     # /!\ convert back *_mod to * otherwise top_res_cov won't find "Vg9Vd2 hi gd T"
