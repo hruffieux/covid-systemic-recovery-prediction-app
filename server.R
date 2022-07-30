@@ -30,6 +30,23 @@ server <- function(input, output, session) {
 
   })
   
+  # observeEvent(input$slider_Gender, {
+  #   if(input$slider_Gender == "Female") {
+  #     updateSelectInput(
+  #       session = session,
+  #       "slider_Gender",
+  #       value = 0
+  #     )
+  #   } else { # Male
+  #     updateSelectInput(
+  #       session = session,
+  #       "slider_Gender",
+  #       value = 1
+  #     )
+  #   }
+  #   
+  # })
+  
   observeEvent(input$signature_0, {
     
     if (!all(signature_0_mod %in% input$signature_0)) { 
@@ -217,6 +234,7 @@ server <- function(input, output, session) {
     inactive_markers <- setdiff(c(signature_0, signature_1, signature_2), 
                                 names(active_markers))
     
+    print(as.numeric(active_markers))
     # /!\ convert back *_mod to * otherwise top_res_cov won't find "Vg9Vd2 hi gd T"
     list_X_new <- lapply(list_X_test_cov, function(ll) {
       
@@ -226,7 +244,7 @@ server <- function(input, output, session) {
       act_ll <- intersect(names(active_markers), names(ll))
       
       if (!is.null(act_ll)) {
-        ll[match(act_ll, names(ll))] <- active_markers[act_ll]
+        ll[match(act_ll, names(ll))] <- as.numeric(active_markers[act_ll])
       }
       
       ll*1 # to convert to numeric in case all NA otherwise converted to logical...

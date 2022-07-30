@@ -97,7 +97,7 @@ ui <- fluidPage(
                selected = signature_0_mod,
                options = list(`actions-box` = T, 
                               # `none-selected-text` = "Please make a selection!",
-                              `selected-text-format` = "count > 4", #,
+                              `selected-text-format` = "count > 0", #,
                               selected = NULL #signature_2_mod[1]
                ),
                multiple = TRUE
@@ -115,17 +115,19 @@ ui <- fluidPage(
                    step = 1,
                    width = NULL
                  )
-                 # sliderInput(paste0("slider_", ss),
-                 #             str_c(ss, ':'),
-                 #             min = 0, max = 100, step = 1, value =  50, #perc_corresp_hc_iqr_mod["50%", ss],# <------------
-                 #             ticks = FALSE)
                } else { # Gender
-                 sliderInput(paste0("slider_", ss),
-                             "Female: 0, Male: 1",
-                             min = 0, max = 1, step = 1, value =  1, #perc_corresp_hc_iqr_mod["50%", ss],# <------------
-                             ticks = FALSE)
-               }}))
-           ),
+                 selectInput(
+                   paste0("slider_", ss),
+                   "Gender:",
+                   choices = c("Female" = 0, "Male" = 1),
+                   selected = 1,
+                   multiple = FALSE,
+                   selectize = TRUE,
+                   width = NULL,
+                   size = NULL
+                 )
+               }})),
+             style='padding-bottom:20px; padding-top:30px;'),
            fluidRow(column(2, pickerInput(
              inputId = "signature_1",
              label = "Signature 1",
