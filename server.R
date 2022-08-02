@@ -79,9 +79,7 @@ server <- function(input, output, session) {
   
   
   observeEvent(input$signature_1, {
-    
-    # print(input$signature_1)
-    
+
     if (!all(signature_1_mod %in% input$signature_1)) {
       lapply(setdiff(signature_1_mod, input$signature_1), function(ss) disable(paste0("slider_", ss)))
     }
@@ -230,11 +228,9 @@ server <- function(input, output, session) {
     })
     names(active_markers) <-  input_signatures # input_signature_1
     
-    # print(active_markers)
     inactive_markers <- setdiff(c(signature_0, signature_1, signature_2), 
                                 names(active_markers))
     
-    print(as.numeric(active_markers))
     # /!\ convert back *_mod to * otherwise top_res_cov won't find "Vg9Vd2 hi gd T"
     list_X_new <- lapply(list_X_test_cov, function(ll) {
       
