@@ -89,45 +89,6 @@ ui <- fluidPage(
            p(paste0("Select patient markers from the two predictive signatures ", 
                     "(cell subsets, polar metabolites, ", 
                     "glyco- & lipo-proteins, diverse metabolic ratios)")),
-           fluidRow(
-             column(2, pickerInput(
-               inputId = "signature_0",
-               label = "",
-               choices = signature_0_mod,
-               selected = signature_0_mod,
-               options = list(`actions-box` = T, 
-                              # `none-selected-text` = "Please make a selection!",
-                              `selected-text-format` = "count > 0", #,
-                              selected = NULL #signature_2_mod[1]
-               ),
-               multiple = TRUE
-             )),
-             chooseSliderSkin("Flat"),
-             shinyjs::useShinyjs(),
-             column(2, offset = 0, id = "slider0", lapply(list_signature_0_mod[[1]], function(ss) {
-               if (ss == "Age") {
-                 numericInput(
-                   paste0("slider_", ss),
-                   str_c(ss, ':'),
-                   value = 50,
-                   min = 0,
-                   max = 100,
-                   step = 1,
-                   width = NULL
-                 )
-               } else { # Gender
-                 selectInput(
-                   paste0("slider_", ss),
-                   "Gender:",
-                   choices = c("Female" = 0, "Male" = 1),
-                   selected = 1,
-                   multiple = FALSE,
-                   selectize = TRUE,
-                   width = NULL,
-                   size = NULL
-                 )
-               }})),
-             style='padding-bottom:20px; padding-top:30px;'),
            fluidRow(column(2, pickerInput(
              inputId = "signature_1",
              label = "Signature 1",
@@ -246,6 +207,50 @@ ui <- fluidPage(
                          htmlOutput("textGuide"),
                          cursor = "move"
            )
-  )
+  ),
+  fluidRow(
+    column(2, pickerInput(
+      inputId = "signature_0",
+      label = "",
+      choices = signature_0_mod,
+      selected = signature_0_mod,
+      options = list(`actions-box` = T, 
+                     # `none-selected-text` = "Please make a selection!",
+                     `selected-text-format` = "count > 0", #,
+                     selected = NULL #signature_2_mod[1]
+      ),
+      multiple = TRUE
+    ),
+    p(em(paste0("Please note that the above biologic parameter values ", 
+                "should be altered along with the age and gender input.\n ", 
+                "Default: median parameter values from healthy controls ", 
+                "(with median age 40 years old, IQR 26; 56 % of males).")), 
+                style = "font-size:10px")),
+    chooseSliderSkin("Flat"),
+    shinyjs::useShinyjs(),
+    column(2, offset = 0, id = "slider0", lapply(list_signature_0_mod[[1]], function(ss) {
+      if (ss == "Age") {
+        numericInput(
+          paste0("slider_", ss),
+          str_c(ss, ':'),
+          value = 50,
+          min = 0,
+          max = 100,
+          step = 1,
+          width = NULL
+        )
+      } else { # Gender
+        selectInput(
+          paste0("slider_", ss),
+          "Gender:",
+          choices = c("Female" = 0, "Male" = 1),
+          selected = 1,
+          multiple = FALSE,
+          selectize = TRUE,
+          width = NULL,
+          size = NULL
+        )
+      }})),
+    style='padding-bottom:20px; padding-top:30px;')
   
 )

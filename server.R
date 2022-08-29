@@ -29,24 +29,7 @@ server <- function(input, output, session) {
     }
 
   })
-  
-  # observeEvent(input$slider_Gender, {
-  #   if(input$slider_Gender == "Female") {
-  #     updateSelectInput(
-  #       session = session,
-  #       "slider_Gender",
-  #       value = 0
-  #     )
-  #   } else { # Male
-  #     updateSelectInput(
-  #       session = session,
-  #       "slider_Gender",
-  #       value = 1
-  #     )
-  #   }
-  #   
-  # })
-  
+
   observeEvent(input$signature_0, {
     
     if (!all(signature_0_mod %in% input$signature_0)) { 
