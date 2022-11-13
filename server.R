@@ -243,7 +243,8 @@ server <- function(input, output, session) {
     backgroundColour2 <- ifelse(pred_scores[2] < 0.7, "sel2-orange", "sel2-white")
     
     output$sel <- renderText({
-      paste0("<br/> <center> <b> Predicted systemic recovery class: ", pred_classes[2],
+      paste0("<br/> <center> <b> Predicted systemic recovery class: ", 
+             ifelse(pred_classes[2] == "iii", "3", "1+2"),
              "<br/> ", 
              ifelse(pred_classes[2] == "iii",
                                "<i>Poor prognosis (pilot tool)</i>",

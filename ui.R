@@ -222,10 +222,10 @@ ui <- fluidPage(
       multiple = TRUE
     ),
     p(em(paste0("Please note that altering age or gender ", 
-                "independently of the above biologic parameters is creating an ", 
-                "artificial input-signature. Default for biologic parameters: ",
+                "independently of the above biological parameters is creating an ", 
+                "artificial input-signature. Default for biological parameters: ",
                 "median values from healthy controls (with median age 40 y.o. ", 
-                "IQR 26; 56 % of males).")), 
+                "IQR 26; 44 % of females).")), 
                 style = "font-size:10px")),
     chooseSliderSkin("Flat"),
     shinyjs::useShinyjs(),
@@ -248,8 +248,8 @@ ui <- fluidPage(
           selected = 1,
           multiple = FALSE,
           selectize = TRUE,
-          width = NULL,
-          size = NULL
+          width = NULL#,
+          #size = NULL
         )
       }})),
     style='padding-bottom:20px; padding-top:30px;')
