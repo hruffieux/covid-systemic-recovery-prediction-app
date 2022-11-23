@@ -70,7 +70,7 @@ multi_auroc <- function(
       }
       
       data$data=lapply(res.predict, function(pp) pp[,,roc.comp])
-      title=paste("ROC curves per data type on test set \n")#, "Comp: ",roc.comp, sep="")
+      title="" #paste("ROC curves per data type on test set \n")#, "Comp: ",roc.comp, sep="")
       
       # print(data)
       temp = my_statauc_multiple(data, plot = TRUE, title = title, vec_col = vec_col)
@@ -215,14 +215,14 @@ my_statauc <- function(data = NULL, plot = FALSE, title = NULL, vec_col = NULL){
                        colour = Outcome)) +
       xlab("100 - Specificity (%)") +
       ylab("Sensitivity (%)") +
-      geom_line(size = 0.75) +
+      geom_line(linewidth = 0.75) +
       scale_x_continuous(breaks=seq(0, 100, by = 10)) +
       scale_y_continuous(breaks=seq(0, 100, by = 10)) +
       theme_bw() 
     
     p = p + geom_abline(intercept = 1) +
       theme(legend.key.size = unit(1, "cm"),
-            plot.title = element_text(lineheight=.8, face="bold"),
+            plot.title = element_blank(), #element_text(lineheight=.8, face="bold"),
             legend.title = element_text(size=14, face="bold")) +
       ggtitle(title) + theme(plot.title = element_text(hjust = 0.5),
                              panel.grid.minor = element_blank(),
@@ -342,7 +342,7 @@ my_statauc_multiple <- function(data = NULL, plot = FALSE, title = NULL, vec_col
                                  colour = "white")) +
       xlab("100 - Specificity (%)") +
       ylab("Sensitivity (%)") +
-      geom_line(size = 0.75) +
+      geom_line(linewidth = 0.75) +
       scale_x_continuous(breaks=seq(0, 100, by = 10)) +
       scale_y_continuous(breaks=seq(0, 100, by = 10)) +
       theme_bw()  
@@ -353,13 +353,13 @@ my_statauc_multiple <- function(data = NULL, plot = FALSE, title = NULL, vec_col
         p = p + geom_line(list_df[[ii]], mapping = aes(x=Specificity,
                                                        y=Sensitivity,
                                                        group = Outcome,
-                                                       colour = Outcome), size = 0.75) 
+                                                       colour = Outcome), linewidth = 0.75) 
         
       } else {
         p = p + geom_line(list_df[[ii]], mapping = aes(x=Specificity,
                                                        y=Sensitivity,
                                                        group = Outcome,
-                                                       colour = Outcome), size = 0.75, col = vec_col[ii])
+                                                       colour = Outcome), linewidth = 0.75, col = vec_col[ii])
       }
     }
     if (is.null(vec_col)) {
@@ -370,7 +370,7 @@ my_statauc_multiple <- function(data = NULL, plot = FALSE, title = NULL, vec_col
     
     p = p + geom_abline(intercept = 1) +
       theme(legend.key.size = unit(1, "cm"),
-            plot.title = element_text(lineheight=.8, face="bold"),
+            plot.title = element_text(lineheight=.8),
             legend.title = element_text(size=0),
             legend.text = element_text(size=10)) +
       ggtitle(title) + theme(plot.title = element_text(hjust = 0.5),

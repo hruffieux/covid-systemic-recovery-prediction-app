@@ -5,7 +5,7 @@ account: mrc-bsu
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6769639
-bundleId: 6247565
+bundleId: 6546552
 url: https://mrc-bsu.shinyapps.io/covid-19-systemic-recovery-prediction-app/
-when: 1661768301.43469
-lastSyncTime: 1661768301.4347
+when: 1669202766.69095
+lastSyncTime: 1669202766.69096

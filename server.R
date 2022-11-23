@@ -269,7 +269,8 @@ server <- function(input, output, session) {
              length(input_signature_1),
              "</b> & <b>", 
              length(input_signature_2),
-             "</b> from signatures 1, resp. 2) <br/><br/> ") 
+             "</b> from signatures 1, resp. 2) <br/><br/> ",
+             "<center>  ROC curves per data type on test set <center/>") 
     })
     
     output$textBox <- renderUI({
