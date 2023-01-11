@@ -5,6 +5,9 @@ library(shinyjs)
 library(shinyWidgets)
 library(mixOmics)
 library(shinyvalidate)
+library(grid)
+library(gridExtra) 
+library(cowplot)
 
 server <- function(input, output, session) { 
   
@@ -326,9 +329,27 @@ server <- function(input, output, session) {
     
     
     if (length(active_markers)>0) {
-      multi_auroc(top_res_cov, newdata = list_X_test_cov_sub, outcome.test = sub_df_info_test[, dep_var],
+      set_null_device("cairo")
+      res <- multi_auroc(top_res_cov, newdata = list_X_test_cov_sub, outcome.test = sub_df_info_test[, dep_var],
                   roc.comp = 2, bool_multiple = TRUE, bool_add_avg = TRUE, vec_col = vec_col_diablo)
+  
+      ff <- factor(res$leg, levels = res$leg)
+      
+      vec_all_col <- c(vec_col_diablo, "black")
+      sub_names <- c("metabolites", "Cell", "Glyco", "Ratios", "gender", "Average")
+      
+      df <- data.frame(AUC = ff, empty = ff)
+      p_empty <- ggplot(df, aes(empty, fill = AUC)) +
+        geom_bar() + 
+        scale_fill_manual(values = vec_all_col[sapply(sub_names, 
+                                                      function(n_cc_i) 
+                                                        {tt <- grep(n_cc_i, ff); ifelse(length(tt) == 0, F, T)})])
+      legend <- get_legend(p_empty)
+
+      grid.arrange(res$graph, legend, ncol = 2, nrow = 1, heights=4, widths=c(2,1))
+
     }
+
   })
   
   

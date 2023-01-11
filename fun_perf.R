@@ -49,9 +49,9 @@ multi_auroc <- function(
       nn_pred <- names(res.predict)
       nn_pred[nn_pred == "MS"] <- "Polar metabolites"
       nn_pred[nn_pred == "cell_types"] <- "Cell subsets"
-      nn_pred[nn_pred == "glyco-lipo-proteins"] <- "Glyco− & Lipo−proteins"
+      nn_pred[nn_pred == "glyco-lipo-proteins"] <- "Glyco− and Lipo−proteins"
       nn_pred[nn_pred == "ratios"] <- "Ratios"
-      nn_pred[nn_pred == "covariates"] <- "Age & gender"
+      nn_pred[nn_pred == "covariates"] <- "Age and gender"
       names(res.predict) <- paste0(" ", nn_pred) 
       names(vec_col) <- names(res.predict) 
       
@@ -73,11 +73,12 @@ multi_auroc <- function(
       title="" #paste("ROC curves per data type on test set \n")#, "Comp: ",roc.comp, sep="")
       
       # print(data)
-      temp = my_statauc_multiple(data, plot = TRUE, title = title, vec_col = vec_col)
+      # temp = my_statauc_multiple(data, plot = TRUE, title = title, vec_col = vec_col)
+      out = my_statauc_multiple(data, plot = TRUE, title = title, vec_col = vec_col)
       
       # }
       
-      out = NULL
+      # out = NULL
       
     } else {
       
@@ -132,6 +133,7 @@ multi_auroc <- function(
   
   # print(auc.mean)
   return(invisible(out))
+  # out
   
 }
 
@@ -234,7 +236,6 @@ my_statauc <- function(data = NULL, plot = FALSE, title = NULL, vec_col = NULL){
       p = p + scale_color_manual(values=vec_col) 
     }
     
-    plot(p)
   } else {
     p=NULL
   }
@@ -298,17 +299,15 @@ my_statauc_multiple <- function(data = NULL, plot = FALSE, title = NULL, vec_col
         ann_text = matrix(ncol=2,nrow=1)
         colnames(ann_text) = c("AUC", "p-value")
         df = rbind(df, cbind(temp_plot$specificities, temp_plot$sensitivities, 
-                             paste(gsub("_", " ", name_predict), "\n", 
-                                   "AUC: ", signif(temp$auc*100, 3), "%")))
-        #ann_text[i , 1] =
+                             paste0(gsub("_", " ", name_predict), ": ", 
+                                    signif(temp$auc*100, 3), "%")))
         ann_text[i , 1] = signif(temp$auc, 3)
         ann_text[i , 2] = signif((1 - pnorm(zauc, 0, 1))*2, 3)
         break
       } else {
         df = rbind(df, cbind(temp_plot$specificities, temp_plot$sensitivities, 
-                             paste(gsub("_", " ", name_predict), "\n", 
-                                   "AUC: ", signif(temp$auc*100, 3), "%")))
-        #ann_text[i , 1] =
+                             paste0(gsub("_", " ", name_predict), ": ", 
+                                   signif(temp$auc*100, 3), "%")))
         ann_text[i , 1] = as.numeric(signif(temp$auc, 3))
         ann_text[i , 2] = as.numeric(signif((1 - pnorm(zauc, 0, 1))*2, 3))
       }
@@ -382,7 +381,8 @@ my_statauc_multiple <- function(data = NULL, plot = FALSE, title = NULL, vec_col
   } else {
     p=NULL
   }
-  return(list(ann_text,graph=p))
+  leg <- unique(as.vector(sapply(list_df, "[[", "Outcome")))
+  return(list(ann_text,graph=p, leg = leg))
   
 }
 
