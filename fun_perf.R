@@ -33,12 +33,9 @@ multi_auroc <- function(
     
     res.predict <- list.predict$predict[bool_keep]  
     
-    # print(res.predict)
-    
     if (is.null(vec_col)) {
       vec_col <- c("#999999", "#56B4E9", "#009E73", # "#F0E442", 
                    "#D55E00", "#CC79A7")[seq_along(res.predict)]
-      # print(vec_col)
     } else {
       vec_col <- vec_col[bool_keep]
     }
@@ -70,15 +67,8 @@ multi_auroc <- function(
       }
       
       data$data=lapply(res.predict, function(pp) pp[,,roc.comp])
-      title="" #paste("ROC curves per data type on test set \n")#, "Comp: ",roc.comp, sep="")
-      
-      # print(data)
-      # temp = my_statauc_multiple(data, plot = TRUE, title = title, vec_col = vec_col)
+      title="" 
       out = my_statauc_multiple(data, plot = TRUE, title = title, vec_col = vec_col)
-      
-      # }
-      
-      # out = NULL
       
     } else {
       
@@ -127,13 +117,10 @@ multi_auroc <- function(
     auc.mean[[paste("comp",roc.comp,sep = "")]] = temp[[1]]
     graph[[paste("comp",roc.comp,sep = "")]] = temp$graph
     
-    # }
     out = c(auc.mean,graph=graph) 
   }
   
-  # print(auc.mean)
   return(invisible(out))
-  # out
   
 }
 
@@ -347,7 +334,7 @@ my_statauc_multiple <- function(data = NULL, plot = FALSE, title = NULL, vec_col
       theme_bw()  
     
     for (ii in 1:length(list_df)) {
-      # print(names(list_df)[ii])
+ 
       if (is.null(vec_col)) {
         p = p + geom_line(list_df[[ii]], mapping = aes(x=Specificity,
                                                        y=Sensitivity,
@@ -381,7 +368,7 @@ my_statauc_multiple <- function(data = NULL, plot = FALSE, title = NULL, vec_col
   } else {
     p=NULL
   }
-  leg <- unique(as.vector(sapply(list_df, "[[", "Outcome")))
+  leg <- unique(as.vector(unlist(lapply(list_df, "[[", "Outcome"))))
   return(list(ann_text,graph=p, leg = leg))
   
 }
